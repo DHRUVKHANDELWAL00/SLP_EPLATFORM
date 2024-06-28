@@ -5,9 +5,12 @@ import {AiOutlineEye,AiOutlineEyeInvisible,AiFillGithub } from'react-icons/ai'
 import { FcGoogle } from 'react-icons/fc'
 import {styles} from '../../styles/style'
 import {FC} from 'react';
+import { useEffect } from 'react'
+import { useLoginMutation } from '@/redux/features/auth/authApi'
+import toast from 'react-hot-toast/headless'
 type Props = {
     setRoute:(route:string)=>void;
-
+    setOpen:(open:boolean)=>void;
 }
 
 const Schema=Yup.object().shape({
@@ -15,16 +18,29 @@ const Schema=Yup.object().shape({
     password: Yup.string().required('Password is required').min(8, 'Password must be at least 8 characters long')
 })
 
-const Login:FC<Props> = ({setRoute}) => {
+const Login:FC<Props> = ({setRoute,setOpen}) => {
+    const [login,{isSuccess,error}]=useLoginMutation();
     const [show,setShow] = React.useState(false);
     const formik = useFormik({
         initialValues: { email: '', password: '' },
         validationSchema: Schema,
         onSubmit: async({email,password}) => {
-            console.log({email,password})
-            // setRoute('Home')
+            await login({email,password});
         },
     })
+    useEffect(() => {
+        if(isSuccess){
+            console.log('Logged in successfully');
+            toast.success('Logged in successfully');
+            setOpen(false);
+        }
+        if(error){
+            if("data" in error){
+                const errorData=error as any;
+                toast.error(errorData.message);
+            }
+        }
+    }, [isSuccess,error]);
     const {errors,touched,values,handleChange,handleSubmit} = formik;
   return (
     <div className='w-full'>
