@@ -7,7 +7,7 @@ import {styles} from '../../styles/style'
 import {FC} from 'react';
 import { useEffect } from 'react'
 import { useLoginMutation } from '@/redux/features/auth/authApi'
-import toast from 'react-hot-toast/headless'
+import {toast} from'react-hot-toast';
 type Props = {
     setRoute:(route:string)=>void;
     setOpen:(open:boolean)=>void;

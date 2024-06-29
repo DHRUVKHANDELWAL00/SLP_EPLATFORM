@@ -8,6 +8,7 @@ import CustomModal from '../utils/CustomModal'
 import Login from './Auth/Login';
 import Signup from './Auth/Signup';
 import Verification from './Auth/Verification'; 
+import { useSelector} from 'react-redux';
 type Props = {
     open:boolean;
     setOpen:(open:boolean)=>void;
@@ -19,6 +20,7 @@ type Props = {
 const Header :FC<Props>= ({activeItem,setOpen,route,open,setRoute}) => {
     const [active,setActive]=useState(false);
   const [openSidebar,setOpenSidebar]=useState(false);
+  const {user}=useSelector((state:any)=>state.auth)
   if(typeof window !== 'undefined'){
     window.addEventListener("scroll", ()=>{
       if(window.scrollY>85){
@@ -51,7 +53,13 @@ const Header :FC<Props>= ({activeItem,setOpen,route,open,setRoute}) => {
                 <div className="800px:hidden">
                   <HiOutlineMenuAlt3 size={25} className='cursor-pointer dark:text-white text-black' onClick={()=>setOpenSidebar(true)}/>
                 </div>
-                <HiOutlineUserCircle size={25} className='hidden 800px:block cursor-pointer dark:text-white text-black' onClick={()=>setOpen(true)}/>
+                {
+                  user?(
+                    <HiOutlineUserCircle size={25} className='hidden 800px:block cursor-pointer dark:text-white text-black' onClick={()=>setOpen(true)}/>
+                  ):(
+                    <HiOutlineUserCircle size={25} className='hidden 800px:block cursor-pointer dark:text-white text-black' onClick={()=>setOpen(true)}/>
+                  )
+                }
 
               </div>
             </div>
