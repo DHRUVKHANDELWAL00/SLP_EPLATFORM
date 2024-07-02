@@ -8,6 +8,7 @@ import {FC} from 'react';
 import { useEffect } from 'react'
 import { useLoginMutation } from '@/redux/features/auth/authApi'
 import {toast} from'react-hot-toast';
+import { signIn } from 'next-auth/react'
 type Props = {
     setRoute:(route:string)=>void;
     setOpen:(open:boolean)=>void;
@@ -76,8 +77,8 @@ const Login:FC<Props> = ({setRoute,setOpen}) => {
                 Or join with
             </h5>
             <div className='flex items-center justify-center my-3'>
-                <FcGoogle size={30} className='mr-3 text-black dark:text-white'/>
-                <AiFillGithub size={30} className='text-black dark:text-white'/>
+                <FcGoogle size={30} className='mr-3 text-black dark:text-white' onClick={()=>signIn("google")}/>
+                <AiFillGithub size={30} className='text-black dark:text-white' onClick={()=>signIn("github")}/>
             </div>
             <h5 className='text-center font-Poppins text-[14px] text-black dark:text-white'>
                 Not have any account?{" "}

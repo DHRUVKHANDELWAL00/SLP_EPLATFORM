@@ -9,6 +9,12 @@ import Login from './Auth/Login';
 import Signup from './Auth/Signup';
 import Verification from './Auth/Verification'; 
 import { useSelector} from 'react-redux';
+import Image from 'next/image';
+import avatar from '../../public/next.svg'
+import { useSession } from 'next-auth/react';
+import { useSocialAuthMutation } from '@/redux/features/auth/authApi';
+import { useEffect } from 'react';
+import {toast} from'react-hot-toast';
 type Props = {
     open:boolean;
     setOpen:(open:boolean)=>void;
@@ -21,6 +27,21 @@ const Header :FC<Props>= ({activeItem,setOpen,route,open,setRoute}) => {
     const [active,setActive]=useState(false);
   const [openSidebar,setOpenSidebar]=useState(false);
   const {user}=useSelector((state:any)=>state.auth)
+  const {data}=useSession();
+  const [socialAuth,{isSuccess,error}]=useSocialAuthMutation();
+
+  useEffect(() => {
+    if(!user){
+      if(data){
+        socialAuth({email:data?.user?.email,name:data?.user?.name,avatar:data?.user?.image});
+      }
+    }
+  }, [data,user]);
+  if(isSuccess){
+    toast.success("Logged in successfully!")
+  }
+  console.log(data);
+  
   if(typeof window !== 'undefined'){
     window.addEventListener("scroll", ()=>{
       if(window.scrollY>85){
@@ -55,7 +76,10 @@ const Header :FC<Props>= ({activeItem,setOpen,route,open,setRoute}) => {
                 </div>
                 {
                   user?(
-                    <HiOutlineUserCircle size={25} className='hidden 800px:block cursor-pointer dark:text-white text-black' onClick={()=>setOpen(true)}/>
+                    <Link href={"/profile"}>
+                    <Image src={user.avatar ? user.avatar : avatar} alt="profile" className='h-[30px] w-[30px] rounded-full'/>
+                    </Link>
+
                   ):(
                     <HiOutlineUserCircle size={25} className='hidden 800px:block cursor-pointer dark:text-white text-black' onClick={()=>setOpen(true)}/>
                   )
