@@ -21,7 +21,7 @@ const page:FC<Props> = (props) => {
             <Heading title={`${user?.name} profile`} description="A self paced learning problems" keywords="Programming,redux,mern"/>
       <Header open={open} setOpen={setOpen} activeItem={activeItem} setRoute={setRoute} route={route} />
       <Hero/>
-      <Profile/>
+      <Profile user={user}/>
         </Protected>
     </div>
   )
