@@ -10,7 +10,7 @@ import Signup from './Auth/Signup';
 import Verification from './Auth/Verification'; 
 import { useSelector} from 'react-redux';
 import Image from 'next/image';
-import avatar from '../../public/next.svg'
+import avatar from '../../public/images.png'
 import { useSession } from 'next-auth/react';
 import { useLogoutQuery, useSocialAuthMutation } from '@/redux/features/auth/authApi';
 import { useEffect } from 'react';
@@ -50,7 +50,7 @@ const Header :FC<Props>= ({activeItem,setOpen,route,open,setRoute}) => {
   }, [data,user]);
   
 
-  console.log(data);
+  // console.log(data);
   
   if(typeof window !== 'undefined'){
     window.addEventListener("scroll", ()=>{
@@ -87,7 +87,7 @@ const Header :FC<Props>= ({activeItem,setOpen,route,open,setRoute}) => {
                 {
                   user?(
                     <Link href={"/profile"}>
-                    <Image src={user.avatar ? user.avatar : avatar} alt="profile" className='h-[30px] w-[30px] rounded-full'/>
+                    <Image src={user.avatar ? user.avatar.url : avatar} alt="profile" className='h-[30px] w-[30px] rounded-full' style={{border: activeItem ===5 ? "2px solid #ffc186":"none"}}/>
                     </Link>
 
                   ):(

@@ -3,7 +3,6 @@ import React,{FC} from 'react'
 import Protected from '../hooks/useProtected'
 import { useState } from 'react'
 import Header from "../components/Header";
-import Hero from "../components/Route/Hero";
 import Heading from "../utils/Heading";
 import Profile from '../components/Profile/Profile'
 import { useSelector } from 'react-redux';
@@ -20,7 +19,6 @@ const page:FC<Props> = (props) => {
         <Protected>
             <Heading title={`${user?.name} profile`} description="A self paced learning problems" keywords="Programming,redux,mern"/>
       <Header open={open} setOpen={setOpen} activeItem={activeItem} setRoute={setRoute} route={route} />
-      <Hero/>
       <Profile user={user}/>
         </Protected>
     </div>

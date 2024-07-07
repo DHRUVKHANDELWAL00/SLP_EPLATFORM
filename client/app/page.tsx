@@ -10,11 +10,11 @@ const Page: FC<Props>=(props)=>{
   const [activeItem,setActiveItem]=useState(0);
   const [route,setRoute]=useState("Login")
   return(
-    <div>
+    <>
       <Heading title="ELearning" description="A self paced learning problems" keywords="Programming,redux,mern"/>
       <Header open={open} setOpen={setOpen} activeItem={activeItem} setRoute={setRoute} route={route} />
       <Hero/>
-    </div>
+    </>
   )
 };
 
