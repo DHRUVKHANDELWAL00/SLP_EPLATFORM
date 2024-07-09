@@ -2,21 +2,31 @@
 import { FC, useEffect, useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography } from "@mui/material";
-import avatarDefault from '@/public/images.png'
 import "react-pro-sidebar/dist/css/styles.css";
 import {
   HomeOutlinedIcon,
   ArrowForwardIosIcon,
   ArrowBackIosIcon,
+  PeopleOutlinedIcon,
   ReceiptOutlinedIcon,
+  BarChartOutlinedIcon,
   MapOutlinedIcon,
   GroupsIcon,
+  OndemandVideoIcon,
+  VideoCallIcon,
+  WebIcon,
+  QuizIcon,
+  WysiwygIcon,
   ManageHistoryIcon,
-  StorefrontIcon,
+  SettingsIcon,
   ExitToAppIcon,
+  StorefrontIcon
 } from "./Icon";
 import Link from "next/link";
 import Image from "next/image";
+import { useTheme } from "next-themes";
+import { useSelector } from "react-redux";
+import avatarDefault from '@/public/images.png'
 
 interface itemProps {
   title: string;
@@ -42,15 +52,18 @@ const Item: FC<itemProps> = ({ title, to, icon, selected, setSelected }) => {
   );
 };
 
-interface Props {
-  selected: string;
-  setSelected: any;
-}
+// interface Props {
+//   selected: string;
+//   setSelected: any;
+// }
 
-const Sidebar = ({ selected, setSelected }: Props) => {
+const Sidebar = () => {
+  const {user}=useSelector((state:any)=>state.auth);
   const [logout, setlogout] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [selected, setSelected] = useState("Dashboard");
   const [mounted, setMounted] = useState(false);
+  const {theme,setTheme}=useTheme();
 
   useEffect(() => setMounted(true), []);
 
@@ -66,7 +79,7 @@ const Sidebar = ({ selected, setSelected }: Props) => {
     <Box
       sx={{
         "& .pro-sidebar-inner": {
-          background: `${"#111C43 !important"}`,
+          background: `${theme === 'dark' ? '#111C43 !important':'#fff !important'}`,
         },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
@@ -82,10 +95,10 @@ const Sidebar = ({ selected, setSelected }: Props) => {
           opacity: 1,
         },
         "& .pro-menu-item": {
-          color: "#fff",
+          color: `${theme !== 'dark' && '#000'}`,
         },
       }}
-      className="bg-[#111C43]"
+      className="!bg-white dark:bg-[#111C43]"
     >
       <ProSidebar
         collapsed={isCollapsed}
@@ -94,8 +107,8 @@ const Sidebar = ({ selected, setSelected }: Props) => {
           top: 0,
           left: 0,
           height: "100vh",
-          zIndex: 99999999999999,
           width: isCollapsed ? "0%" : "16%",
+          
         }}
       >
         <Menu iconShape="square">
@@ -105,6 +118,7 @@ const Sidebar = ({ selected, setSelected }: Props) => {
             icon={isCollapsed ? <ArrowForwardIosIcon /> : undefined}
             style={{
               margin: "10px 0 20px 0",
+              color:"#000",
             }}
           >
             {!isCollapsed && (
@@ -115,8 +129,8 @@ const Sidebar = ({ selected, setSelected }: Props) => {
                 ml="15px"
               >
                 <Link href="/" className="block">
-                  <h3 className="text-[25px] font-Poppins uppercase text-white">
-                    Becodemy
+                  <h3 className="text-[25px] font-Poppins uppercase dark:text-white text-black">
+                    Elearning
                   </h3>
                 </Link>
                 <IconButton
@@ -137,7 +151,7 @@ const Sidebar = ({ selected, setSelected }: Props) => {
                   width={100}
                   height={100}
                   src={
-                    avatarDefault
+                    user.avatar ? user.avatar.url : avatarDefault
                   }
                   style={{
                     cursor: "pointer",
@@ -149,17 +163,17 @@ const Sidebar = ({ selected, setSelected }: Props) => {
               <Box textAlign="center">
                 <Typography
                   variant="h4"
-                  className="!text-[20px]  text-[#ffffffc1]"
+                  className="!text-[20px]  dark:text-[#ffffffc1] text-black"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  Dhruv Khandelwal
+                  {user?.name}
                 </Typography>
                 <Typography
                   variant="h6"
                   sx={{ m: "10px 0 0 0" }}
-                  className="!text-[20px]  text-[#ffffffc1] capitalize"
+                  className="!text-[20px] text-black  dark:text-[#ffffffc1] capitalize"
                 >
-                  - Admin
+                  - {user?.role}
                 </Typography>
               </Box>
             </Box>
@@ -168,45 +182,100 @@ const Sidebar = ({ selected, setSelected }: Props) => {
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
             <Item
               title="Dashboard"
-              to="/"
+              to="/admin"
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
+            <Typography
+                  variant="h5"
+                  sx={{ m: "15px 0 5px 25px" }}
+                  className="!text-[18px] text-black  dark:text-[#ffffffc1] capitalize !font-[400]"
+                >
+                  {!isCollapsed && "Data"}
+                </Typography>
             <Item
               title="Users"
-              to="/users"
+              to="/admin/users"
               icon={<GroupsIcon />}
               selected={selected}
               setSelected={setSelected}
             />
-
+            <Typography
+                  variant="h5"
+                  sx={{ m: "15px 0 5px 25px" }}
+                  className="!text-[18px] text-black  dark:text-[#ffffffc1] capitalize !font-[400]"
+                >
+                  {!isCollapsed && "Content"}
+                </Typography>
             <Item
-              title="Shops"
-              to="/shops"
-              icon={<StorefrontIcon />}
+              title="Create Course"
+              to="/admin/create-course"
+              icon={<VideoCallIcon />}
               selected={selected}
               setSelected={setSelected}
             />
 
             <Item
-              title="Invoices"
-              to="/invoices"
-              icon={<ReceiptOutlinedIcon />}
+              title="Live Courses"
+              to="/admin/courses"
+              icon={<OndemandVideoIcon />}
               selected={selected}
               setSelected={setSelected}
             />
+            <Typography
+                  variant="h5"
+                  sx={{ m: "15px 0 5px 25px" }}
+                  className="!text-[18px] text-black  dark:text-[#ffffffc1] capitalize !font-[400]"
+                >
+                  {!isCollapsed && "Customization"}
+                </Typography>
             <Item
-              title="All Prompts"
-              to="/prompts"
+              title="Hero"
+              to="/admin/hero"
               icon={<MapOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="Withdraw requests"
-              to="/withdraw-requests"
+              title="FAQ"
+              to="/admin/faq"
               icon={<ManageHistoryIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Categories"
+              to="/admin/categories"
+              icon={<ManageHistoryIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Typography
+                  variant="h5"
+                  sx={{ m: "15px 0 5px 25px" }}
+                  className="!text-[18px] text-black  dark:text-[#ffffffc1] capitalize !font-[400]"
+                >
+                  {!isCollapsed && "Controllers"}
+                </Typography>
+            <Item
+              title="Manage Team"
+              to="/admin/hero"
+              icon={<MapOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Typography
+                  variant="h5"
+                  sx={{ m: "15px 0 5px 25px" }}
+                  className="!text-[18px] text-black  dark:text-[#ffffffc1] capitalize !font-[400]"
+                >
+                  {!isCollapsed && "Analytics"}
+                </Typography>
+            <Item
+              title="Manage Team"
+              to="/admin/hero"
+              icon={<MapOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
