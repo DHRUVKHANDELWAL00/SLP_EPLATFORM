@@ -120,6 +120,12 @@ const CourseInformation:FC<Props> = ({courseInfo,setCourseInfo,active,setActive}
                     }
                 </label>
             </div>
+            <div className="w-full flex items-center justify-end">
+                <input type='submit' className="w-full 800px:w-[180px] h-[40px] bg-[#37a39a] text-center text-[#fff] cursor pointer rounded mt-8" value="Next"/>
+            </div>
+            <br/>
+            <br/>
+            
         </form>
 
     </div>
