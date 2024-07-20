@@ -7,11 +7,11 @@ userRouter.post('/activateuser',activateUser);
 userRouter.post('/loginuser',loginUser);
 userRouter.get('/logout',isAuthenticated,logoutUser);
 userRouter.get("/refreshtoken",updateAccessToken)
-userRouter.get("/getuserbyid",isAuthenticated,getUserInfo)
+userRouter.get("/getuserbyid",updateAccessToken,isAuthenticated,getUserInfo)
 userRouter.post("/socialAuth",socialAuth)
-userRouter.put("/updateUser",isAuthenticated,updateUserInfo)
-userRouter.put("/updateUserPassword",isAuthenticated,updatePassword)
-userRouter.put("/updateUserAvatar",isAuthenticated,updateProfilePicture)
+userRouter.put("/updateUser",updateAccessToken,isAuthenticated,updateUserInfo)
+userRouter.put("/updateUserPassword",updateAccessToken,isAuthenticated,updatePassword)
+userRouter.put("/updateUserAvatar",updateAccessToken,isAuthenticated,updateProfilePicture)
 userRouter.get("/getAllUsers",getAllUsers);
 userRouter.put(
   "/update-user",

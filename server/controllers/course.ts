@@ -1,3 +1,4 @@
+require('dotenv').config();
 import {Request,Response,NextFunction} from 'express';
 import { catchAsyncError } from '../middlewares/catchAsyncError';
 import ErrorHandler from '../utils/ErrorHandler';
@@ -10,9 +11,15 @@ import { MongoTopologyClosedError } from 'mongodb';
 import { isTemplateLiteral } from 'typescript';
 import { userInfo } from 'os';
 import ejs from "ejs"
+import axios from 'axios'
 import path from 'path';
 import sendMail from '../utils/sendMail';
 import notificationModel from '../models/Notification-model';
+cloudinary.v2.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_SECRET_KEY
+});
 //upload course
 export const uploadCourse=catchAsyncError(async(req:Request,res:Response,next:NextFunction)=>{
     try {
@@ -92,21 +99,21 @@ export const getSingleCourse=catchAsyncError(async(req:Request,res:Response,next
 //get all courses without authentiate
 export const getAllCourse=catchAsyncError(async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        const isCacheExist=await redis.get("allCourses");
-        if(isCacheExist){
-            const course=JSON.parse(isCacheExist);
-            res.status(200).json({
-                success:true,
-                course,
-            })
-        }else{
+        // const isCacheExist=await redis.get("allCourses");
+        // if(isCacheExist){
+        //     const course=JSON.parse(isCacheExist);
+        //     res.status(200).json({
+        //         success:true,
+        //         course,
+        //     })
+        // }else{
             const course=await CourseModel.find().select('-courseData.videoUrl -courseData.suggestion -corseData.questions -courseData.links')
-            await redis.set("allCourses",JSON.stringify(course));
+            // await redis.set("allCourses",JSON.stringify(course));
         res.status(200).json({
             success:true,
             course,
         })
-        }
+        
         
     } catch (error:any) {
         return next(new ErrorHandler(error.message,400))
@@ -346,18 +353,46 @@ export const getAdminAllCourses = catchAsyncError(
   }
 );
 
+export const generateVideoUrl = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { videoId } = req.body;
+        const response = await axios.post(
+            `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
+            { ttl: 300 },
+            {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    Authorization: `Apisecret ${process.env.VDOCIPHER_API_SECRET}`,
+                },
+                timeout: 5000, // Set a timeout of 5 seconds
+            }
+        );
+        console.log(response.data);
+        res.status(200).json(response.data);
+    } catch (error: any) {
+        console.error('Error generating video URL:', error.message);
+        return next(new ErrorHandler(error.message, 400));
+    }
+});
 
-
-
-
-
-
-
-
-
-
-
-
+export const deleteCourse=catchAsyncError(async (req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const {id}=req.params;
+        const course=await CourseModel.findById(id);
+        if(!course){
+            return next(new ErrorHandler("Course not found",404));
+        }
+        await course.deleteOne({id});
+        await redis.del(id)
+        res.status(200).json({
+            success:true,
+            message:"Course deleted successfully",
+        })
+    } catch (error:any) {
+        return next(new ErrorHandler(error.message,400))
+    }
+})
 
 
 

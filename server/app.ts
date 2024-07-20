@@ -8,6 +8,8 @@ import courseRouter from './routes/course';
 import orderRouter from './routes/order';
 import notificationRouter from './routes/notification';
 import { ErrorMiddleware } from './middlewares/error';
+import analyticsRouter from './routes/analytics';
+import layoutRouter from './routes/layout';
 //body-parser(CLOUDINARY)
 app.use(express.json({limit:"50mb"}))
 app.use(cookieParser())
@@ -25,6 +27,9 @@ app.use("/api/v1",userRouter)
 app.use("/api/v1",courseRouter)
 app.use("/api/v1",orderRouter)
 app.use("/api/v1",notificationRouter)
+app.use("/api/v1",analyticsRouter)
+
+app.use("/api/v1",layoutRouter);
 
 
 

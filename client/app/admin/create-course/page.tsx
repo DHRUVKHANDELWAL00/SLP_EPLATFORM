@@ -2,7 +2,7 @@
 import React,{FC,useState} from 'react';
 import AdminSidebar from '../../components/Admin/AdminSidebar'
 import Heading from '@/app/utils/Heading'
-import CreateCourse from '@/app/components/Admin/Course/CreateCourse'
+import CreateCourse from '@/app/components/Admin/Courses/CreateCourse'
 import DashBoardHeader from '@/app/components/Admin/DashBoardHeader'
 type Props = {}
 

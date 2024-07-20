@@ -166,7 +166,7 @@ const Sidebar = () => {
                   className="!text-[20px]  dark:text-[#ffffffc1] text-black"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  {user?.name}
+                  Dhruv Khandelwal
                 </Typography>
                 <Typography
                   variant="h6"
