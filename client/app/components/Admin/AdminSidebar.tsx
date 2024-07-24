@@ -260,7 +260,7 @@ const Sidebar = () => {
                 </Typography>
             <Item
               title="Manage Team"
-              to="/admin/hero"
+              to="/admin/team"
               icon={<MapOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}

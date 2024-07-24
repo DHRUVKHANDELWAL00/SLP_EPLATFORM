@@ -1,15 +1,19 @@
-import React from 'react'
+import React,{FC,useState} from 'react'
 import {DataGrid} from '@mui/x-data-grid';
 import {Box,Button} from '@mui/material';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { useTheme } from 'next-themes';
 import { FiEdit2 } from 'react-icons/fi';
+import { styles } from '@/app/styles/style';
 import Loader from '../../Loader/Loader';
 import { useGetAllUsersQuery } from '@/redux/features/user/userApi';
-type Props = {}
+type Props = {
+  isTeam:boolean;
+}
 
-const AllCourses = (props: Props) => {
+const AllCourses:FC<Props> = ({isTeam}) => {
     const {theme,setTheme}=useTheme();
+    const [active,setActive]=useState(false);
 const { data, isLoading, error } = useGetAllUsersQuery({});
     console.log(data);
     const columns=[
@@ -17,7 +21,7 @@ const { data, isLoading, error } = useGetAllUsersQuery({});
         {field:"name",headerName:"Name",flex:1},
         {field:"email",headerName:"Email",flex:0.5},
         {field:"role",headerName:"Role",flex:0.5},
-        {field:"courses",headerName:"Purchased",flex:0.5},
+        {field:"courses",headerName:"Purchased Courses",flex:0.5},
 
         {
             field:" ",
@@ -36,7 +40,21 @@ const { data, isLoading, error } = useGetAllUsersQuery({});
         }
     ];
     const rows:any=[];
-    {
+    if(isTeam){
+      {
+        const newData=data && data.users.filter((item:any)=>item.role==="admin")
+        newData && newData?.users?.forEach((item:any)=>{
+            rows.push({
+                id:item._id,
+                name:item.name,
+                email:item.email,
+                role:item.role,
+                courses:item.courses.length,
+            })
+        })
+    }
+    }else{
+      {
         data && data.users.forEach((item:any)=>{
             rows.push({
                 id:item._id,
@@ -47,12 +65,18 @@ const { data, isLoading, error } = useGetAllUsersQuery({});
             })
         })
     }
+    }
 
   return (
     <div className='mt-[120px]'>
        {
         isLoading ? <Loader/> :(
             <Box m="20px">
+              <div className='w-full flex justify-end'>
+                <div className={`${styles.submitButton} !w-[200px] dark:bg-[#57c7a3] !h-[35px] dark:border-[#ffffff6c]`} onClick={()=>setActive(!active)}>
+                  Add New Member
+                </div>
+              </div>
       <Box
         m="40px 0 0 0"
         height="80vh"
@@ -60,6 +84,7 @@ const { data, isLoading, error } = useGetAllUsersQuery({});
           "& .MuiDataGrid-root": {
             border: "none",
             outline: "none",
+            color: theme === "dark" ? "#fff" : "#000",
           },
           "& .css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon": {
             color: theme === "dark" ? "#fff" : "#000",
@@ -105,7 +130,7 @@ const { data, isLoading, error } = useGetAllUsersQuery({});
         }}
       >
         {/* The rest of the component JSX would go here */}
-        <DataGrid rows={rows} columns={columns} checkboxSelection />
+        <DataGrid rows={rows} columns={columns} checkboxSelection/>
       </Box>
     </Box>
         )

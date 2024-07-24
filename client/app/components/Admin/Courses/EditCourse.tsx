@@ -5,17 +5,26 @@ import CourseOptions from './CourseOptions'
 import CourseData from './CourseData'
 import CourseContent from './CourseContent'
 import CoursePreview from './CoursePreview'
-import { useCreateCourseMutation } from '@/redux/features/courses/coursesApi'
-import { redirect } from 'next/navigation'
+import { useCreateCourseMutation, useEditCourseMutation, useGetAllCoursesQuery } from '@/redux/features/courses/coursesApi'
+import { redirect, useParams } from 'next/navigation'
 import {toast} from'react-hot-toast';
 
-type Props = {}
+type Props = {
+    id:string;
+}
 
-const CreateCourse = (props: Props) => {
-    const [createCourse,{isLoading,isSuccess,error}]=useCreateCourseMutation()
+const EditCourse:FC<Props> = ({id}) => {
+    const [editCourse,{isSuccess,error}]=useEditCourseMutation()
+    const {isLoading,data,refetch}=useGetAllCoursesQuery({},{refetchOnMountOrArgChange:true})
+
+    const editCourseData=data && data?.courses?.find((i:any)=>i._id===id);
+    console.log(id)
+    
+
+    
     useEffect(() => {
         if(isSuccess){
-            toast.success("Course Created Successfully");
+            toast.success("Course Updated Successfully");
             redirect('/admin/courses');
         }
         if(error){
@@ -24,7 +33,7 @@ const CreateCourse = (props: Props) => {
                 toast.error(errorMessage.data.message);
             }
         }
-    }, [isLoading,isSuccess,error]);
+    }, [isSuccess,error]);
     const [active,setActive]=useState(0);
     const [courseInfo,setCourseInfo]=useState({
         name:"",
@@ -36,6 +45,25 @@ const CreateCourse = (props: Props) => {
         demoUrl:"",
         thumbnail:"",
     });
+    console.log(editCourseData);
+    
+    useEffect(()=>{
+        if(editCourseData){
+            setCourseInfo({
+                            name:editCourseData.name,
+                            description:editCourseData.description,
+                            price:editCourseData.price,
+                            estimatedPrice:editCourseData.estimatedPrice,
+                            tags:editCourseData.tags,
+                            level:editCourseData.level,
+                            demoUrl:editCourseData.demoUrl,
+                            thumbnail:editCourseData?.thumbnail?.url,
+                        })
+                        setBenefits(editCourseData.benefits)
+                        setPreRequisites(editCourseData.preRequisites)
+                        setCourseContentData(editCourseData.courseData)
+        }
+    },[editCourseData])
     const [benefits,setBenefits]=useState([{title:''}])
     const [preRequisites,setPreRequisites]=useState([{title:""}]);
     const [courseContentData,setCourseContentData]=useState([
@@ -80,7 +108,7 @@ const handleSubmit=async()=>{
                 totalVideo:courseContentData.length,
                 benefits:formattedBenefits,
                 preRequisites:formattedPreRequisites,
-                courseData:formattedCourseContentData,
+                courseContentData:formattedCourseContentData,
     }
     setCourseData(data);
     console.log(courseData);
@@ -88,9 +116,7 @@ const handleSubmit=async()=>{
 }
 const handleCourseCreate=async(e:any)=>{
     const data=courseData;
-    if(!isLoading){
-        await createCourse(data);
-    }
+    await editCourse({id:editCourseData?._id,data})
 }
   return (
     <div className="w-full flex min-h-screen">
@@ -112,14 +138,14 @@ const handleCourseCreate=async(e:any)=>{
             }
             {
                 active===3 && (
-                    <CoursePreview active={active} setActive={setActive} courseData={courseData} handleCourseCreate={handleCourseCreate} isEdit={false}/>
+                    <CoursePreview active={active} setActive={setActive} courseData={courseData} handleCourseCreate={handleCourseCreate} isEdit={true}/>
                 ) 
             }
         </div>
         <div className="w-[20%] mt-[100px] h-screen fixed z-[-1] top-18 right-0">
-            <CourseOptions active={active} setActive={setActive}/>
+            <CourseOptions active={active} setActive={setActive} />
         </div>
     </div>
   )
 }
-export default CreateCourse
+export default EditCourse

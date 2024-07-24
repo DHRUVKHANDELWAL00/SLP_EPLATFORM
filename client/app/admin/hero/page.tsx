@@ -6,7 +6,8 @@ import CreateCourse from '@/app/components/Admin/Courses/CreateCourse'
 import DashBoardHeader from '@/app/components/Admin/DashBoardHeader'
 import AdminProtected from '@/app/hooks/adminProtected';
 import DashBoardHero from '@/app/components/Admin/DashBoardHero';
-import AllUsers from '@/app/components/Admin/Courses/AllUsers';
+import AllCourses from '@/app/components/Admin/Courses/AllCourses';
+import EditHero from '@/app/components/Admin/Customization/EditHero';
 type Props = {
     activeItem:string;
 }
@@ -22,7 +23,7 @@ const page = (props: Props) => {
                  </div>
                  <div className="w-[85%]">
                     <DashBoardHero/>
-                    <AllUsers isTeam={false}/>
+                    <EditHero/>
                  </div>
             </div>
         </AdminProtected>

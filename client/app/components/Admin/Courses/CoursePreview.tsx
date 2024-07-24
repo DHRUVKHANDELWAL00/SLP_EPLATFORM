@@ -10,9 +10,10 @@ type Props = {
     setActive:(active:number)=>void;
     courseData:any;
     handleCourseCreate:any;
+    isEdit:Boolean;
 }
 
-const CoursePreview:FC<Props> = ({active,setActive,courseData,handleCourseCreate}) => {
+const CoursePreview:FC<Props> = ({active,setActive,courseData,handleCourseCreate, isEdit}) => {
   const discountPercentage=((courseData?.estimatedPrice-courseData?.price)/(courseData?.estimatedPrice)*100);
 const discounedPercentagePrice=discountPercentage.toFixed()
 const prevButton=()=>{
@@ -103,7 +104,9 @@ const createCourse=()=>{
         </div>
         <div className='w-full flex items-center justify-between'>
         <div className="w-full 800px:w-[180px] flex items-center justify-center h-[40px] bg-[#37a39a] text-center text-[#fff] rounded mt-8 cursor-pointer" onClick={()=>prevButton()}>Prev</div>
-                <div className="w-full 800px:w-[180px] flex items-center justify-center h-[40px] bg-[#37a39a] text-center text-[#fff] rounded mt-8 cursor-pointer" onClick={()=>createCourse()}>Create</div>
+                <div className="w-full 800px:w-[180px] flex items-center justify-center h-[40px] bg-[#37a39a] text-center text-[#fff] rounded mt-8 cursor-pointer" onClick={()=>createCourse()}>
+                  {isEdit? 'Update Course': 'Create Course'}
+                </div>
 
       </div>
        
