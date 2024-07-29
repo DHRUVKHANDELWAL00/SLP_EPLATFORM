@@ -3,10 +3,13 @@ import { ThemeSwitcher } from '@/app/utils/ThemeSwitcher'
 import { IoIosNotificationsOutline } from 'react-icons/io'
 import React,{FC,useState,useEffect} from 'react'
 
-type Props = {}
+type Props = {
+    open:boolean;
+    setOpen:(open:boolean)=>void;
+}
 
-const DashBoardHeader:FC<Props> = (Props) => {
-    const [open,setOpen]=useState(false);
+const DashBoardHeader:FC<Props> = ({open,setOpen}) => {
+    // const [open,setOpen]=useState(false);
   return (
     <div className='w-full flex items-center justify-end p-6 fixed top-5 right-8'>
         <ThemeSwitcher/>

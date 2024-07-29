@@ -159,6 +159,14 @@ const CourseContent:FC<Props> = ({active,setActive,courseContentData,setCourseCo
                     }}/>
                   </div>
                   <div className="mb-3">
+                    <label className={styles.label}>Video Length</label>
+                    <input type="number" placeholder='25' className={styles.input} value={item.videoLength} onChange={(e)=>{
+                      const updatedData=[...courseContentData];
+                      updatedData[index].videoLength= e.target.value;
+                      setCourseContentData(updatedData);
+                    }}/>
+                  </div>
+                  <div className="mb-3">
                     <label className={styles.label}>Video Description</label>
                     <textarea rows={8} cols={30} placeholder='Content' className={`${styles.input} !h-min py-2`} value={item.description} onChange={(e)=>{
                       const updatedData=[...courseContentData];

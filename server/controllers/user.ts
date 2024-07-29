@@ -208,6 +208,7 @@ export const updateAccessToken = catchAsyncError(
       req.user = user;
       res.cookie("access_token", accessToken, accessTokenOptions);
       res.cookie("refresh_token", refreshToken, refreshTokenOptions);
+      await redis.set(user._id, JSON.stringify(user), "EX", 604800);
 
       next()
     } catch (error: any) {
@@ -410,6 +411,39 @@ export const deleteUser = catchAsyncError(
         success: true,
         message: "User deleted successfully",
       });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+
+//add course
+interface IUpdateUserCourse {
+  email: string;
+  courseId:string;
+}
+export const updateUserCourse = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email, courseId } = req.body as IUpdateUserCourse;
+            const user  = await userModel.findOne({ email });
+      // console.log(email,courseId);
+      if (user) {
+        const course = user.courses.find((c) => c.courseId === courseId);
+        if (!course) {
+          user.courses.push({ courseId });
+        }
+      }
+      await user?.save();
+      // if(user){
+      //   await redis.set(user?._id, JSON.stringify(user));
+      // }
+      res.status(201).json({
+        success: true,
+        user,
+      });
+
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }

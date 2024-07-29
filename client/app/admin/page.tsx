@@ -19,7 +19,7 @@ const page = (props: Props) => {
                     <AdminSidebar/>
                  </div>
                  <div className="w-[85%]">
-                    <DashBoardHero/>
+                    <DashBoardHero isDashboard={true}/>
                  </div>
             </div>
         </AdminProtected>

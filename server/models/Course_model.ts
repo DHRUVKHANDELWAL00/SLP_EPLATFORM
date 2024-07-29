@@ -26,6 +26,17 @@ interface ICourseData extends Document{
     links:ILink[];
     suggestion:string;
     questions:IComment[];
+    quiz?: IQuiz;
+}
+interface IQuizQuestion extends Document {
+  question: string;
+  options: string[];
+  correctAnswer: string;
+}
+
+interface IQuiz extends Document {
+  title: string;
+  questions: IQuizQuestion[];
 }
 interface ICourse extends Document{
     name:string;
@@ -35,6 +46,7 @@ interface ICourse extends Document{
     thumbnail:object;
     tags:string;
     level:string;
+    categories?:string;
     demoUrl:string;
     benefits: {title:string}[];
     preRequisites: {title:string}[];
@@ -43,6 +55,16 @@ interface ICourse extends Document{
     ratings?:number;
     purchased?:number;
 }
+const quizQuestionSchema = new Schema<IQuizQuestion>({
+  question: String,
+  options: [String],
+  correctAnswer: String,
+});
+
+const quizSchema = new Schema<IQuiz>({
+  title: String,
+  questions: [quizQuestionSchema],
+});
 const reviewSchema=new Schema<IReview>({
     user:Object,
     rating:{
@@ -72,6 +94,7 @@ const courseDataSchema=new Schema<ICourseData>({
     links:[linkSchema],
     suggestion:String,
     questions:[commentSchema],
+    quiz: quizSchema,
 })
 
 const courseSchema=new Schema<ICourse>({
@@ -106,6 +129,10 @@ const courseSchema=new Schema<ICourse>({
     },
     level:{
         required:true,
+        type:String,
+    },
+    categories:{
+        // required:true,
         type:String,
     },
     demoUrl:{

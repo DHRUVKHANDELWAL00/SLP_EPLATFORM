@@ -39,17 +39,40 @@ export const userApi=apiSlice.injectEndpoints({
                 credentials: "include" as const,
             })
         }),
-        deleteUser:builder.mutation({
-            query:(id)=>({
-                url:`/delete-user/${id}`,
-                method:"DELETE",
-                body:{
-                    id,
-                },
-                credentials: "include" as const,
-            })
-        }),
+        // deleteUser:builder.mutation({
+        //     query:(id)=>({
+        //         url:`/delete-user/${id}`,
+        //         method:"DELETE",
+        //         body:{
+        //             id,
+        //         },
+        //         credentials: "include" as const,
+        //     })
+        // }),
+        updateUserRole: builder.mutation({
+      query: ({ email, role }) => ({
+        url: "update-user-role",
+        method: "PUT",
+        body: { email, role },
+        credentials: "include" as const,
+      }),
+    }),
+    deleteUser: builder.mutation({
+      query: (id) => ({
+        url: `delete-user/${id}`,
+        method: "DELETE",
+        credentials: "include" as const,
+      }),
+    }),
+    updateUserCourse:builder.mutation({
+      query: ({ email, courseId }) => ({
+        url: "update-user-course",
+        method: "PUT",
+        body: { email, courseId },
+        credentials: "include" as const,
+      }),
+    }),
 
     })
 })
-export const {useUpdateAvatarMutation,useEditProfileMutation,useUpdatePasswordMutation,useGetAllUsersQuery,useDeleteUserMutation}=userApi
+export const {useUpdateAvatarMutation,useEditProfileMutation,useUpdatePasswordMutation,useGetAllUsersQuery,useDeleteUserMutation,useUpdateUserRoleMutation,useUpdateUserCourseMutation}=userApi
